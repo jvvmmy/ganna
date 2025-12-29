@@ -7,10 +7,12 @@
 <!-- PWA -->
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#ff4d6d">
+<link rel="apple-touch-icon" href="icon.png">
 
 <style>
 :root {
   --bg1:#ff4d6d; --bg2:#1b1b1b; --card:rgba(255,255,255,.15); --text:white;
+  --accent1:#ff6eb4; --accent2:#ff85c1;
 }
 body.night {
   --bg1:#0f2027; --bg2:#203a43; --card:rgba(0,0,0,.5); --text:#dff9fb;
@@ -37,7 +39,7 @@ body{
 }
 #lockScreen button{
   padding:10px 30px;border-radius:25px;
-  border:none;background:#ff4d6d;color:white;cursor:pointer;
+  border:none;background:var(--accent1);color:white;cursor:pointer;
 }
 #error{color:red;margin-top:5px}
 
@@ -57,30 +59,50 @@ p{min-height:60px;font-size:18px;margin-bottom:20px}
 button{
   width:100%;padding:12px;margin:6px 0;
   border:none;border-radius:25px;
-  background:#ff4d6d;color:white;
+  background: linear-gradient(45deg,var(--accent1),var(--accent2));
+  color:white;font-weight:600;
   cursor:pointer;transition:.3s;
 }
-button:hover{transform:scale(1.05)}
+button:hover{transform:scale(1.05);box-shadow:0 0 15px var(--accent1);}
 #counter{position:absolute;bottom:15px;width:100%;text-align:center;font-size:14px;opacity:.8}
 
 /* Hearts */
 .heart{
-  position:absolute;color:#ff4d6d;
+  position:absolute;
   animation:float 6s linear forwards;
 }
 @keyframes float{
-  from{transform:translateY(0) scale(1);opacity:1}
-  to{transform:translateY(-350px) scale(2);opacity:0}
+  from{transform:translateY(0) scale(1);opacity:1;}
+  to{transform:translateY(-350px) scale(2);opacity:0;}
 }
 
-/* POPUP MESSAGE */
+/* Touch My Heart Animation */
+#heartMessage{
+  position: fixed; top:50%; left:50%;
+  transform: translate(-50%,-50%) scale(1);
+  pointer-events:none; z-index:99999;
+  font-size:36px; font-weight:bold; text-align:center;
+  opacity:0;
+  text-shadow:0 0 15px var(--accent1),0 0 25px var(--accent2);
+  color:white;
+}
+.heart.float-animated{
+  animation:floatVar 3s ease-out forwards;
+}
+@keyframes floatVar{
+  0% {transform: translateY(0) scale(1); opacity:1;}
+  50% {transform: translateY(-150px) scale(1.2); opacity:1;}
+  100% {transform: translateY(-400px) scale(1.5); opacity:0;}
+}
+
+/* Popup Notification */
 #popupMessage{
   position: fixed;
   top: 20px;
   left: 50%;
   transform: translateX(-50%) translateY(-50px);
-  background: #ff4d6d;
-  color: white;
+  background: linear-gradient(45deg,var(--accent1),var(--accent2));
+  color: #fff;
   padding: 15px 25px;
   border-radius: 25px;
   font-size: 18px;
@@ -90,15 +112,8 @@ button:hover{transform:scale(1.05)}
   z-index: 99999;
 }
 </style>
-
-<script>
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('service-worker.js');
-}
-</script>
 </head>
-
-<body>
+<body class="night">
 
 <!-- LOCK -->
 <div id="lockScreen">
@@ -108,10 +123,13 @@ if('serviceWorker' in navigator){
   <p id="error"></p>
 </div>
 
-<!-- POPUP MESSAGE -->
+<!-- Touch My Heart -->
+<div id="heartMessage">Ahmodk love you Ganna ❤️</div>
+
+<!-- Popup -->
 <div id="popupMessage"></div>
 
-<!-- APP -->
+<!-- Phone App -->
 <div class="phone">
   <div class="status">
     <span>📶 LTE</span>
@@ -123,20 +141,18 @@ if('serviceWorker' in navigator){
     <h1>Ganna Hussain ❤️</h1>
     <p id="message">You are my forever</p>
 
-    <button onclick="aiMessage()">🧠 Message for you ganty</button>
+    <button onclick="aiMessage()">🧠 Message for you Ganty</button>
     <button onclick="toggleMode()">🌌 Night / Love Mode</button>
-    <button onclick="burst()">💖 Touch My Heart</button>
+    <button onclick="touchMyHeart()">💖 Touch My Heart</button>
     <button onclick="sendLoveNotification()">🔔 Notify Ganty</button>
   </div>
 
   <div id="counter"></div>
 </div>
 
-<script src="ai.js"></script>
-
 <script>
-/* ====== LOCK SCREEN ====== */
-const SECRET="GannaHussain❤️";
+/* ===== LOCK SCREEN ===== */
+const SECRET="jimmy";
 function unlock(){
   const p=document.getElementById("password").value;
   if(p===SECRET){
@@ -150,65 +166,156 @@ if(localStorage.getItem("unlocked")==="true"){
   document.getElementById("lockScreen").style.display="none";
 }
 
-/* ====== NIGHT MODE ====== */
+/* ===== NIGHT MODE ===== */
 function toggleMode(){document.body.classList.toggle("night");}
 
-/* ====== HEARTS ====== */
-function createHeart(x=Math.random()*innerWidth,y=innerHeight){
+/* ===== HEARTS ===== */
+function createHeart(x=Math.random()*innerWidth,y=innerHeight,color="#ff6eb4"){
   const h=document.createElement("div");
-  h.className="heart"; h.innerHTML="❤️";
-  h.style.left=x+"px"; h.style.top=y+"px";
+  h.className="heart";
+  h.style.color=color;
+  h.innerHTML="❤️";
+  h.style.left=x+"px";
+  h.style.top=y+"px";
   h.style.fontSize=Math.random()*25+15+"px";
   document.body.appendChild(h);
   setTimeout(()=>h.remove(),6000);
 }
 setInterval(()=>createHeart(),400);
-function burst(){for(let i=0;i<12;i++)createHeart();}
 
-/* ====== COUNTER ====== */
+/* ===== TOUCH MY HEART ===== */
+function touchMyHeart(){
+  const heartMsg = document.getElementById("heartMessage");
+  heartMsg.style.opacity = 1;
+  heartMsg.style.transform = `translate(-50%, -55%) scale(1.1)`;
+  heartMsg.style.transition = "all 0.6s ease";
+
+  const colors = ["#ff6eb4","#ff8ef4","#d26cd6","#b43ccf"];
+  
+  for(let i=0;i<20;i++){
+    const x = Math.random()*window.innerWidth;
+    const heart = document.createElement("div");
+    heart.className="heart float-animated";
+    heart.style.left = x+"px";
+    heart.style.top = window.innerHeight+"px";
+    heart.style.fontSize = Math.random()*25+15+"px";
+    heart.style.color = colors[Math.floor(Math.random()*colors.length)];
+    heart.innerHTML="❤️";
+    document.body.appendChild(heart);
+    setTimeout(()=>heart.remove(),3000);
+  }
+
+  setTimeout(()=>{ 
+    heartMsg.style.opacity = 0;
+    heartMsg.style.transform = `translate(-50%, -50%) scale(1)`; 
+  },3000);
+}
+
+/* ===== COUNTER ===== */
 let s=0;
 setInterval(()=>{
   s++;
   counter.innerText=`❤️ Loving Ganna Hussain for ${s} seconds`;
 },1000);
 
-/* ====== AI MESSAGE ====== */
-/* يبقى كما هو في ai.js */
+/* ===== STATIC LOVE MESSAGES ===== */
+const loveMessages = [
+"Being with you, Ganna, feels like warmth I didn’t know I was missing until you came into my life.",
+"Your presence, Ganna, has a way of calming my heart without saying a single word.",
+"I love how safe and peaceful everything feels when I’m with you, Ganna.",
+"Your smile, Ganna, brings comfort to my heart in the simplest and sweetest way.",
+"Loving you, Ganna, feels gentle, honest, and deeply comforting.",
+"You have a quiet way, Ganna, of making everything feel okay again.",
+"I find warmth in you, Ganna, in your kindness and your presence.",
+"Being close to you, Ganna, feels like my heart finally found its place.",
+"I love how your presence alone, Ganna, can soften even my hardest days.",
+"With you, Ganna, love feels calm, steady, and real.",
+"Your smile, Ganna, feels like a soft light that warms my entire world.",
+"I feel most at peace when I know you’re near, Ganna.",
+"Loving you, Ganna, feels natural, like something my heart always knew.",
+"You bring comfort to my life, Ganna, just by being yourself.",
+"I love how everything feels lighter when you’re around, Ganna.",
+"Your kindness, Ganna, leaves a quiet warmth in my heart.",
+"With you, Ganna, even silence feels comforting.",
+"Being with you, Ganna, feels like resting after a long day.",
+"You have a way, Ganna, of making love feel simple and true.",
+"I cherish how safe my heart feels with you, Ganna.",
+"Your presence, Ganna, fills my heart in the softest way.",
+"Loving you, Ganna, feels like choosing peace every day.",
+"You make warmth feel real, Ganna, not just a word.",
+"I love how your smile, Ganna, stays with me long after I see it.",
+"Being near you, Ganna, brings a calm I can’t explain.",
+"Your care and tenderness, Ganna, mean more to me than you realize.",
+"With you, Ganna, love feels steady and reassuring.",
+"I find comfort in the way you exist in my life, Ganna.",
+"You bring a quiet happiness, Ganna, that stays.",
+"Loving you, Ganna, feels like coming home.",
+"Your warmth, Ganna, reaches my heart in ways words can’t describe.",
+"I love how natural it feels to care about you this deeply, Ganna.",
+"With you, Ganna, affection feels easy and sincere.",
+"You make my heart feel understood and accepted, Ganna.",
+"Being with you, Ganna, feels like peace mixed with warmth.",
+"Your presence alone, Ganna, makes everything feel softer.",
+"I feel comforted just knowing you’re there, Ganna.",
+"Loving you, Ganna, feels steady, calm, and deeply real.",
+"You have a gentle way, Ganna, of holding my heart.",
+"I love how you make love feel safe, Ganna.",
+"Your smile, Ganna, warms places in my heart I didn’t know were cold.",
+"Being close to you, Ganna, feels quietly beautiful.",
+"You bring a warmth, Ganna, that stays even when you’re not around.",
+"I feel lighter and calmer whenever I think of you, Ganna.",
+"Loving you, Ganna, feels like choosing something pure and honest.",
+"Your presence, Ganna, brings a softness to my days.",
+"With you, Ganna, love feels calm and deeply comforting.",
+"I appreciate the gentle care you bring into my life, Ganna.",
+"You make warmth feel constant and real, Ganna.",
+"Being with you, Ganna, feels like my heart can finally relax.",
+"Your love, Ganna, feels soft, steady, and reassuring.",
+"I love how simply being near you, Ganna, feels enough.",
+"With you, Ganna, my heart feels held and protected.",
+"You bring comfort, Ganna, without even trying.",
+"Loving you, Ganna, feels warm in the quietest way.",
+"Your presence, Ganna, makes everything feel more peaceful.",
+"I cherish the calm love we share, Ganna.",
+"Being with you, Ganna, feels like choosing warmth every time.",
+"You make my heart feel safe and cared for, Ganna.",
+"Loving you, Ganna, feels like the most natural thing my heart has ever done."
+];
 
-/* ====== NOTIFICATIONS + POPUP ====== */
+/* ===== AI MESSAGE BUTTON (STATIC) ===== */
+function aiMessage(){
+  const msg = loveMessages[Math.floor(Math.random()*loveMessages.length)];
+  const messageEl = document.getElementById("message");
+  messageEl.innerText = msg;
+}
+
+/* ===== NOTIFICATIONS + Popup ===== */
 function sendLoveNotification(){
   const popup = document.getElementById("popupMessage");
   popup.innerText = "🎉 Happy Birthday Ganty 🎂❤️";
-
-  // اظهار الرسالة مع انيميشن صعود
   popup.style.opacity = 1;
   popup.style.transform = "translateX(-50%) translateY(0px)";
 
-  // انفجار قلوب
-  for(let i=0;i<15;i++){
-    createHeart(Math.random()*window.innerWidth, window.innerHeight);
+  const colors = ["#ff6eb4","#ff8ef4","#d26cd6","#b43ccf"];
+  for(let i=0;i<12;i++){
+    createHeart(Math.random()*window.innerWidth, window.innerHeight, colors[Math.floor(Math.random()*colors.length)]);
   }
 
-  // اختفاء الرسالة بعد 3 ثواني
   setTimeout(()=>{
     popup.style.opacity = 0;
     popup.style.transform = "translateX(-50%) translateY(-50px)";
   },3000);
 
-  // إشعار نظامي
   if(Notification.permission==="granted"){
     new Notification("🎉 Happy Birthday Ganty 🎂",{
       body:"Wishing you a day full of love and happiness ❤️",
       vibrate:[200,100,200]
     });
+  } else {
+    Notification.requestPermission();
   }
 }
-
-/* طلب إذن الإشعارات */
-function requestNotificationPermission(){
-  if("Notification" in window) Notification.requestPermission();
-}
-requestNotificationPermission();
+Notification.requestPermission();
 </script>
 
 </body>
