@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Ganna Hussain ❤️</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#ff4d6d">
+
+<style>
+:root {
+  --bg1:#ff4d6d; --bg2:#1b1b1b; --card:rgba(255,255,255,.15); --text:white;
+}
+body.night {
+  --bg1:#0f2027; --bg2:#203a43; --card:rgba(0,0,0,.5); --text:#dff9fb;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI'}
+body{
+  height:100vh;
+  background:linear-gradient(135deg,var(--bg1),var(--bg2));
+  display:flex;justify-content:center;align-items:center;
+  color:var(--text);overflow:hidden;transition:.6s;
+}
+
+/* Lock Screen */
+#lockScreen{
+  position:fixed;inset:0;
+  background:black;
+  display:flex;flex-direction:column;
+  justify-content:center;align-items:center;
+  z-index:9999;
+}
+#lockScreen input{
+  padding:12px;border-radius:25px;border:none;
+  width:250px;text-align:center;margin:10px 0;
+}
+#lockScreen button{
+  padding:10px 30px;border-radius:25px;
+  border:none;background:#ff4d6d;color:white;cursor:pointer;
+}
+#error{color:red;margin-top:5px}
+
+/* Phone App */
+.phone{
+  width:350px;height:700px;
+  border-radius:35px;
+  background:var(--card);
+  backdrop-filter:blur(15px);
+  box-shadow:0 30px 60px rgba(0,0,0,.5);
+  padding:20px;position:relative;
+}
+.status{display:flex;justify-content:space-between;font-size:14px;opacity:.8}
+.app{text-align:center;margin-top:40px}
+h1{font-size:34px;margin-bottom:10px}
+p{min-height:60px;font-size:18px;margin-bottom:20px}
+button{
+  width:100%;padding:12px;margin:6px 0;
+  border:none;border-radius:25px;
+  background:#ff4d6d;color:white;
+  cursor:pointer;transition:.3s;
+}
+button:hover{transform:scale(1.05)}
+#counter{position:absolute;bottom:15px;width:100%;text-align:center;font-size:14px;opacity:.8}
+
+/* Hearts */
+.heart{
+  position:absolute;color:#ff4d6d;
+  animation:float 6s linear forwards;
+}
+@keyframes float{
+  from{transform:translateY(0) scale(1);opacity:1}
+  to{transform:translateY(-350px) scale(2);opacity:0}
+}
+
+/* POPUP MESSAGE */
+#popupMessage{
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50px);
+  background: #ff4d6d;
+  color: white;
+  padding: 15px 25px;
+  border-radius: 25px;
+  font-size: 18px;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.5s ease;
+  z-index: 99999;
+}
+</style>
+
+<script>
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('service-worker.js');
+}
+</script>
+</head>
+
+<body>
+
+<!-- LOCK -->
+<div id="lockScreen">
+  <h2>🔐 Ganna Hussain Only</h2>
+  <input type="password" id="password" placeholder="Secret Love Password">
+  <button onclick="unlock()">Unlock ❤️</button>
+  <p id="error"></p>
+</div>
+
+<!-- POPUP MESSAGE -->
+<div id="popupMessage"></div>
+
+<!-- APP -->
+<div class="phone">
+  <div class="status">
+    <span>📶 LTE</span>
+    <span>❤️</span>
+    <span>🔋100%</span>
+  </div>
+
+  <div class="app">
+    <h1>Ganna Hussain ❤️</h1>
+    <p id="message">You are my forever</p>
+
+    <button onclick="aiMessage()">🧠 Message for you ganty</button>
+    <button onclick="toggleMode()">🌌 Night / Love Mode</button>
+    <button onclick="burst()">💖 Touch My Heart</button>
+    <button onclick="sendLoveNotification()">🔔 Notify Ganty</button>
+  </div>
+
+  <div id="counter"></div>
+</div>
+
+<script src="ai.js"></script>
+
+<script>
+/* ====== LOCK SCREEN ====== */
+const SECRET="GannaHussain❤️";
+function unlock(){
+  const p=document.getElementById("password").value;
+  if(p===SECRET){
+    document.getElementById("lockScreen").style.display="none";
+    localStorage.setItem("unlocked","true");
+  }else{
+    document.getElementById("error").innerText="Wrong password 💔";
+  }
+}
+if(localStorage.getItem("unlocked")==="true"){
+  document.getElementById("lockScreen").style.display="none";
+}
+
+/* ====== NIGHT MODE ====== */
+function toggleMode(){document.body.classList.toggle("night");}
+
+/* ====== HEARTS ====== */
+function createHeart(x=Math.random()*innerWidth,y=innerHeight){
+  const h=document.createElement("div");
+  h.className="heart"; h.innerHTML="❤️";
+  h.style.left=x+"px"; h.style.top=y+"px";
+  h.style.fontSize=Math.random()*25+15+"px";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),6000);
+}
+setInterval(()=>createHeart(),400);
+function burst(){for(let i=0;i<12;i++)createHeart();}
+
+/* ====== COUNTER ====== */
+let s=0;
+setInterval(()=>{
+  s++;
+  counter.innerText=`❤️ Loving Ganna Hussain for ${s} seconds`;
+},1000);
+
+/* ====== AI MESSAGE ====== */
+/* يبقى كما هو في ai.js */
+
+/* ====== NOTIFICATIONS + POPUP ====== */
+function sendLoveNotification(){
+  const popup = document.getElementById("popupMessage");
+  popup.innerText = "🎉 Happy Birthday Ganty 🎂❤️";
+
+  // اظهار الرسالة مع انيميشن صعود
+  popup.style.opacity = 1;
+  popup.style.transform = "translateX(-50%) translateY(0px)";
+
+  // انفجار قلوب
+  for(let i=0;i<15;i++){
+    createHeart(Math.random()*window.innerWidth, window.innerHeight);
+  }
+
+  // اختفاء الرسالة بعد 3 ثواني
+  setTimeout(()=>{
+    popup.style.opacity = 0;
+    popup.style.transform = "translateX(-50%) translateY(-50px)";
+  },3000);
+
+  // إشعار نظامي
+  if(Notification.permission==="granted"){
+    new Notification("🎉 Happy Birthday Ganty 🎂",{
+      body:"Wishing you a day full of love and happiness ❤️",
+      vibrate:[200,100,200]
+    });
+  }
+}
+
+/* طلب إذن الإشعارات */
+function requestNotificationPermission(){
+  if("Notification" in window) Notification.requestPermission();
+}
+requestNotificationPermission();
+</script>
+
+</body>
+</html>
