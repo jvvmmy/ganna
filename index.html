@@ -55,7 +55,7 @@ body{
 .status{display:flex;justify-content:space-between;font-size:14px;opacity:.8}
 .app{text-align:center;margin-top:40px}
 h1{font-size:34px;margin-bottom:10px}
-p{min-height:60px;font-size:18px;margin-bottom:20px}
+p#message{min-height:60px;font-size:18px;margin-bottom:20px}
 button{
   width:100%;padding:12px;margin:6px 0;
   border:none;border-radius:25px;
@@ -157,13 +157,9 @@ function unlock(){
   const p=document.getElementById("password").value;
   if(p===SECRET){
     document.getElementById("lockScreen").style.display="none";
-    localStorage.setItem("unlocked","true");
   }else{
     document.getElementById("error").innerText="Wrong password 💔";
   }
-}
-if(localStorage.getItem("unlocked")==="true"){
-  document.getElementById("lockScreen").style.display="none";
 }
 
 /* ===== NIGHT MODE ===== */
@@ -205,10 +201,7 @@ function touchMyHeart(){
     setTimeout(()=>heart.remove(),3000);
   }
 
-  setTimeout(()=>{ 
-    heartMsg.style.opacity = 0;
-    heartMsg.style.transform = `translate(-50%, -50%) scale(1)`; 
-  },3000);
+  setTimeout(()=>{heartMsg.style.opacity = 0; heartMsg.style.transform = `translate(-50%, -50%) scale(1)`;},3000);
 }
 
 /* ===== COUNTER ===== */
@@ -218,78 +211,51 @@ setInterval(()=>{
   counter.innerText=`❤️ Loving Ganna Hussain for ${s} seconds`;
 },1000);
 
-/* ===== STATIC LOVE MESSAGES ===== */
-const loveMessages = [
-"Being with you, Ganna, feels like warmth I didn’t know I was missing until you came into my life.",
-"Your presence, Ganna, has a way of calming my heart without saying a single word.",
-"I love how safe and peaceful everything feels when I’m with you, Ganna.",
-"Your smile, Ganna, brings comfort to my heart in the simplest and sweetest way.",
-"Loving you, Ganna, feels gentle, honest, and deeply comforting.",
-"You have a quiet way, Ganna, of making everything feel okay again.",
-"I find warmth in you, Ganna, in your kindness and your presence.",
-"Being close to you, Ganna, feels like my heart finally found its place.",
-"I love how your presence alone, Ganna, can soften even my hardest days.",
-"With you, Ganna, love feels calm, steady, and real.",
-"Your smile, Ganna, feels like a soft light that warms my entire world.",
-"I feel most at peace when I know you’re near, Ganna.",
-"Loving you, Ganna, feels natural, like something my heart always knew.",
-"You bring comfort to my life, Ganna, just by being yourself.",
-"I love how everything feels lighter when you’re around, Ganna.",
-"Your kindness, Ganna, leaves a quiet warmth in my heart.",
-"With you, Ganna, even silence feels comforting.",
-"Being with you, Ganna, feels like resting after a long day.",
-"You have a way, Ganna, of making love feel simple and true.",
-"I cherish how safe my heart feels with you, Ganna.",
-"Your presence, Ganna, fills my heart in the softest way.",
-"Loving you, Ganna, feels like choosing peace every day.",
-"You make warmth feel real, Ganna, not just a word.",
-"I love how your smile, Ganna, stays with me long after I see it.",
-"Being near you, Ganna, brings a calm I can’t explain.",
-"Your care and tenderness, Ganna, mean more to me than you realize.",
-"With you, Ganna, love feels steady and reassuring.",
-"I find comfort in the way you exist in my life, Ganna.",
-"You bring a quiet happiness, Ganna, that stays.",
-"Loving you, Ganna, feels like coming home.",
-"Your warmth, Ganna, reaches my heart in ways words can’t describe.",
-"I love how natural it feels to care about you this deeply, Ganna.",
-"With you, Ganna, affection feels easy and sincere.",
-"You make my heart feel understood and accepted, Ganna.",
-"Being with you, Ganna, feels like peace mixed with warmth.",
-"Your presence alone, Ganna, makes everything feel softer.",
-"I feel comforted just knowing you’re there, Ganna.",
-"Loving you, Ganna, feels steady, calm, and deeply real.",
-"You have a gentle way, Ganna, of holding my heart.",
-"I love how you make love feel safe, Ganna.",
-"Your smile, Ganna, warms places in my heart I didn’t know were cold.",
-"Being close to you, Ganna, feels quietly beautiful.",
-"You bring a warmth, Ganna, that stays even when you’re not around.",
-"I feel lighter and calmer whenever I think of you, Ganna.",
-"Loving you, Ganna, feels like choosing something pure and honest.",
-"Your presence, Ganna, brings a softness to my days.",
-"With you, Ganna, love feels calm and deeply comforting.",
-"I appreciate the gentle care you bring into my life, Ganna.",
-"You make warmth feel constant and real, Ganna.",
-"Being with you, Ganna, feels like my heart can finally relax.",
-"Your love, Ganna, feels soft, steady, and reassuring.",
-"I love how simply being near you, Ganna, feels enough.",
-"With you, Ganna, my heart feels held and protected.",
-"You bring comfort, Ganna, without even trying.",
-"Loving you, Ganna, feels warm in the quietest way.",
-"Your presence, Ganna, makes everything feel more peaceful.",
-"I cherish the calm love we share, Ganna.",
-"Being with you, Ganna, feels like choosing warmth every time.",
-"You make my heart feel safe and cared for, Ganna.",
-"Loving you, Ganna, feels like the most natural thing my heart has ever done."
+/* ===== STATIC MESSAGES ===== */
+const messages=[
+"Ganna, you are my forever ❤️","My heart feels safe with you Ganna",
+"Ganna, loving you feels natural","You are my calm place Ganna",
+"Ganna, you are my favorite feeling","My soul smiles when I think of you Ganna",
+"Ganna, you make my world softer","You are my emotional home Ganna",
+"Ganna, my heart chose you","Every second with you matters Ganna",
+"Ganna, you are my peace","My heart trusts you Ganna",
+"Ganna, you complete me","Your name feels warm Ganna",
+"Ganna, I adore your soul","You are my constant Ganna",
+"Ganna, you matter deeply to me","My heart relaxes with you Ganna",
+"Ganna, you are my favorite thought","Your love feels real Ganna",
+"Ganna, I love you quietly and deeply ❤️",
+"Ganna, my heart beats only for you","You are my sweetest dream Ganna",
+"Ganna, your smile lights my world","Being with you feels magical Ganna",
+"Ganna, you are my sunshine","You make my life brighter Ganna",
+"Ganna, my love for you grows daily","I treasure every moment with you Ganna",
+"Ganna, my soul is yours","With you, I feel complete Ganna",
+"Ganna, you are my star","You make my nights beautiful Ganna",
+"Ganna, I cherish your laughter","Your touch heals me Ganna",
+"Ganna, my love is endless","You are my forever Ganna",
+"Ganna, you are my heart's home","Thinking of you fills me with joy Ganna",
+"Ganna, every heartbeat whispers your name","You are my peace and love Ganna",
+"Ganna, my dearest","You complete my world Ganna",
+"Ganna, you are my heart's melody","I adore everything about you Ganna",
+"Ganna, loving you is my greatest joy","You are my dream come true Ganna",
+"Ganna, you are my heart's delight","You are my everything Ganna",
+"Ganna, my heart smiles for you","Being near you feels heaven Ganna",
+"Ganna, you are my treasure","Every moment with you is precious Ganna",
+"Ganna, I love your soul","You make me a better person Ganna",
+"Ganna, my love shines for you","You are my endless happiness Ganna",
+"Ganna, you are my angel","I feel complete with you Ganna",
+"Ganna, my forever","You are the love of my life Ganna",
+"Ganna, my heart is yours","With you, everything feels right Ganna",
+"Ganna, you are my world","I can't imagine life without you Ganna",
+"Ganna, you are my everything","You are my heartbeat Ganna",
+"Ganna, my love","I adore you endlessly Ganna"
 ];
-
-/* ===== AI MESSAGE BUTTON (STATIC) ===== */
+let idx=0;
 function aiMessage(){
-  const msg = loveMessages[Math.floor(Math.random()*loveMessages.length)];
-  const messageEl = document.getElementById("message");
-  messageEl.innerText = msg;
+  message.innerText = messages[idx];
+  idx=(idx+1)%messages.length;
 }
 
-/* ===== NOTIFICATIONS + Popup ===== */
+/* ===== POPUP ===== */
 function sendLoveNotification(){
   const popup = document.getElementById("popupMessage");
   popup.innerText = "🎉 Happy Birthday Ganty 🎂❤️";
@@ -317,6 +283,5 @@ function sendLoveNotification(){
 }
 Notification.requestPermission();
 </script>
-
 </body>
 </html>
